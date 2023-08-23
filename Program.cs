@@ -8,14 +8,16 @@ namespace AzureOpenAI {
         private static readonly OpenAIClient _client =
             new(new Uri(Constants.RESOURCE_ENDPOINT), new AzureKeyCredential(Constants.API_KEY));
 
-        private static List<KeyValuePair<int, string>> _options = new() { 
-            new KeyValuePair<int, string>(1,"Completion"),
-            new KeyValuePair<int, string>(2,"Chat Completion"),
-            new KeyValuePair<int, string>(3,"Embeddings")
-        };
+        private static List<KeyValuePair<int, string>>? Options { get; set; }
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            Options = new() {
+                new KeyValuePair<int, string>(1,"Completion"),
+                new KeyValuePair<int, string>(2,"Chat Completion"),
+                new KeyValuePair<int, string>(3,"Embeddings")
+            };
+
             Console.WriteLine("--------------------------------------------------------------------------");
             Console.WriteLine("- Wellcome to Azure OpenAI by C#. Ten thousand times easier than python! -");
             Console.WriteLine("--------------------------------------------------------------------------");
@@ -33,9 +35,9 @@ namespace AzureOpenAI {
                 else
                 {
                     var isNumeric = int.TryParse(option, out int n);
-                    if (!isNumeric || n > _options.Count)
+                    if (!isNumeric || n > Options.Count)
                     {
-                        Console.WriteLine($"Wrong option! Please provide a number between 1 and {_options.Count}");
+                        Console.WriteLine($"Wrong option! Please provide a number between 1 and {Options.Count}");
                     }
                     WriteOptions();
                     option = Console.ReadLine();
@@ -91,7 +93,7 @@ namespace AzureOpenAI {
 
         public static void WriteOptions()
         {
-            foreach (var option in _options)
+            foreach (var option in Options)
             {
                 Console.WriteLine($"{option.Key} - {option.Value}");
             }
@@ -103,11 +105,11 @@ namespace AzureOpenAI {
             if (value == null) return false;
             var isNumeric = int.TryParse((string?)value, out int n);
             return isNumeric 
-                ? n >= 1 && n <= _options.Count
+                ? n >= 1 && n <= Options.Count
                 : ((string)value).ToUpper() == "Y" || ((string)value).ToUpper() == "N";
         }
 
-        private static void Retry()
+        public static void Retry()
         {
             Console.Write("Would you like to try again [Y/N]? If no, application will close.");
             var yesNo = Console.ReadLine();
@@ -132,9 +134,9 @@ namespace AzureOpenAI {
                     else
                     {
                         var isNumeric = int.TryParse(option, out int n);
-                        if (!isNumeric || n > _options.Count)
+                        if (!isNumeric || n > Options.Count)
                         {
-                            Console.WriteLine($"Wrong option! Please provide a number between 1 and {_options.Count}");
+                            Console.WriteLine($"Wrong option! Please provide a number between 1 and {Options.Count}");
                         }
                         WriteOptions();
                         option = Console.ReadLine();
